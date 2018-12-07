@@ -3815,7 +3815,7 @@ int32_t InitDram(void)
 	uint32_t bus_mbps, bus_mbpsdiv;
 	uint32_t tmp_tccd;
 	uint32_t failcount;
-
+    PutStr("InitDram", 1);
 	/***********************************************************************
 	Thermal sensor setting
 	***********************************************************************/
@@ -3848,14 +3848,19 @@ int32_t InitDram(void)
 #endif//RCAR_DDR_FIXED_LSI_TYPE
 
 	if(Prr_Product==PRR_PRODUCT_H3){
+        PutStr("InitDram H3", 1);
 		if(Prr_Cut<=PRR_PRODUCT_11){
+            PutStr("InitDram H3 00", 1);
 			pDDR_REGDEF_TBL = (uint32_t *)&DDR_REGDEF_TBL[0][0];
 		} else {
+            PutStr("InitDram H3 20", 1);
 			pDDR_REGDEF_TBL = (uint32_t *)&DDR_REGDEF_TBL[2][0];
 		}
 	} else if(Prr_Product==PRR_PRODUCT_M3){
+        PutStr("InitDram M3", 1);
 		pDDR_REGDEF_TBL = (uint32_t *)&DDR_REGDEF_TBL[1][0];
 	} else if((Prr_Product==PRR_PRODUCT_M3N)||(Prr_Product==PRR_PRODUCT_V3H)){
+        PutStr("InitDram M3N", 1);
 		pDDR_REGDEF_TBL = (uint32_t *)&DDR_REGDEF_TBL[3][0];
 	} else {
 		FATAL_MSG("DDR:Unknown Product");
@@ -3872,11 +3877,17 @@ int32_t InitDram(void)
 	/***********************************************************************
 	Judge board type
 	***********************************************************************/
+#if 0
 	_cnf_BOARDTYPE = boardcnf_get_brd_type();
 	if(_cnf_BOARDTYPE>=BOARDNUM){
+        PutStr("DDR:Unknown Board", 1);
 		FATAL_MSG("DDR:Unknown Board");
 		return 0xff;
 	}
+#else
+    _cnf_BOARDTYPE = 9;
+#endif
+
 	Boardcnf = (struct _boardcnf *)&boardcnfs[_cnf_BOARDTYPE];
 
 //RCAR_DRAM_SPLIT_2CH		(2U)
@@ -3989,8 +4000,10 @@ int32_t InitDram(void)
 	}
 
 	if(failcount==0){
+        PutStr("INITDRAM_OK", 1);
 		return INITDRAM_OK;
 	} else {
+        PutStr("INITDRAM_NG", 1);
 		return INITDRAM_NG;
 	}
 }
